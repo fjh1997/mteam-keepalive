@@ -18,10 +18,27 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Download token cache
+        uses: actions/download-artifact@v4
+        with:
+          name: mteam-data
+          path: data
+        continue-on-error: true
+
       - name: Run mtlogin
         run: |
+          mkdir -p data
           docker run --rm \
+            -v ${{ github.workspace }}/data:/data \
             -e USERNAME="${{ secrets.MT_USERNAME }}" \
             -e PASSWORD="${{ secrets.MT_PASSWORD }}" \
             -e TOTPSECRET="${{ secrets.MT_TOTPSECRET }}" \
             ghcr.io/${{ github.repository_owner }}/mtlogin:latest
+
+      - name: Upload token cache
+        uses: actions/upload-artifact@v4
+        with:
+          name: mteam-data
+          path: data/
+          retention-days: 90
+        if: always()
