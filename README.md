@@ -70,6 +70,15 @@ Fork 后确保仓库为 **Private**（保护 Secrets）。
 - **自动重试**：Token 过期时单次运行内自动重新登录（账号+密码+TOTP），无需等待下次定时任务
 - **飞书通知**：支持飞书 Open API Bot，仅在失败时通知
 
+## 反检测机制
+
+脚本使用 [curl_cffi](https://github.com/lexiforest/curl_cffi) 模拟 Chrome 124 的 TLS/JA3 指纹，而非 Python 原生 `requests` 库。这意味着：
+
+- 请求的 TLS 握手特征与真实 Chrome 浏览器一致，不会被识别为 Python 脚本
+- 配合随机化的 User-Agent、设备指纹（DID/visitorid）和请求签名算法（`_sgin`），进一步降低被风控检测的风险
+
+Go 版 [scjtqs2/mtlogin](https://github.com/scjtqs2/mtlogin) 使用的是 CycleTLS（JA4 指纹伪造），原理类似但实现不同。两者在反检测能力上各有优势，本项目的 curl_cffi 方案在 GitHub Actions 环境下更轻量且易于部署。
+
 ## 环境变量
 
 脚本支持通过环境变量配置所有参数，命令行参数优先。完整参数列表参见[上游文档](https://github.com/CangShui/mtlogin-py#环境变量)。
