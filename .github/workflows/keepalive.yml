@@ -18,12 +18,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Download token cache
-        uses: actions/download-artifact@v4
+      - name: Restore token cache
+        uses: actions/cache@v4
         with:
-          name: mteam-data
           path: data
-        continue-on-error: true
+          key: mteam-token-${{ runner.os }}
+          restore-keys: |
+            mteam-token-
 
       - name: Run mtlogin
         run: |
@@ -34,11 +35,3 @@ jobs:
             -e PASSWORD="${{ secrets.MT_PASSWORD }}" \
             -e TOTPSECRET="${{ secrets.MT_TOTPSECRET }}" \
             ghcr.io/${{ github.repository_owner }}/mtlogin:latest
-
-      - name: Upload token cache
-        uses: actions/upload-artifact@v4
-        with:
-          name: mteam-data
-          path: data/
-          retention-days: 90
-        if: always()
