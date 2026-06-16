@@ -34,4 +34,7 @@ jobs:
             -e USERNAME="${{ secrets.MT_USERNAME }}" \
             -e PASSWORD="${{ secrets.MT_PASSWORD }}" \
             -e TOTPSECRET="${{ secrets.MT_TOTPSECRET }}" \
+            -e FEISHU_APP_ID="${{ secrets.FEISHU_APP_ID }}" \
+            -e FEISHU_APP_SECRET="${{ secrets.FEISHU_APP_SECRET }}" \
+            -e FEISHU_RECEIVE_ID="${{ secrets.FEISHU_RECEIVE_ID }}" \
             ghcr.io/${{ github.repository_owner }}/mtlogin:latest
