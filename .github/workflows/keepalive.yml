@@ -1,4 +1,4 @@
-name: M-Team 保活
+name: M-Team keepalive
 
 on:
   schedule:
@@ -8,13 +8,11 @@ on:
 jobs:
   keepalive:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/scjtqs2/mtlogin:edge
-    env:
-      USERNAME: ${{ secrets.MT_USERNAME }}
-      PASSWORD: ${{ secrets.MT_PASSWORD }}
-      TOTPSECRET: ${{ secrets.MT_TOTPSECRET }}
-      CRONTAB: ''
     steps:
-      - name: 运行 mtlogin 保活
-        run: /app/mtlogin
+      - name: Run mtlogin
+        run: |
+          docker run --rm \
+            -e USERNAME="${{ secrets.MT_USERNAME }}" \
+            -e PASSWORD="${{ secrets.MT_PASSWORD }}" \
+            -e TOTPSECRET="${{ secrets.MT_TOTPSECRET }}" \
+            ghcr.io/scjtqs2/mtlogin:edge
